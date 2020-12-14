@@ -1,0 +1,37 @@
+<script src = 'BJGE.js'></script>
+<canvas id = 'c' width = "640" height = "480"></canvas>
+
+<script> var game = new GameEngine("#c",35);</script>
+
+<script src = 'objects/obj_player/obj_player.js'></script>
+<script src = 'objects/obj_foe/obj_foe.js'></script>
+<script>
+	
+	let room1 = new Room("room1",640,480);
+	room1.background='black';
+	room1.addObject(obj_player); 
+	room1.addObject(obj_foe);
+	
+	
+	
+	spr_floor = new Sprite("spr_floor", "spr_tiles.png",32,0,32,32,32,32);
+	Floor = function(x,y) {
+		let obj_floor = new GameObject("obj_floor", x, y, spr_floor);
+		obj_floor.solid = true;
+		return obj_floor;
+	}	
+	room1.addObject(new Floor(32,256));
+	room1.addObject(new Floor(32*2,256));
+	room1.addObject(new Floor(32*3,256));
+	room1.addObject(new Floor(32*4,256));
+	room1.addObject(new Floor(32*5,256));
+	room1.addObject(new Floor(32*6,256));
+	room1.addObject(new Floor(32*7,256));
+	room1.addObject(new Floor(32*8,256));
+	room1.addObject(new Floor(32*9,256));
+	room1.addObject(new Floor(32*10,256));
+	room1.addObject(new Floor(32*11,256)); 
+	
+	game.setCurrentRoom(room1);
+	game.begin();
+</script>
