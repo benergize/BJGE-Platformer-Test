@@ -1,5 +1,7 @@
 let obj_player = new GameObject("obj_player",32,32);
 
+
+//---- Variables ----//
 obj_player.friction = 1.5;
 obj_player.collisionBox = [34, 24, 34, 30];
  
@@ -13,8 +15,10 @@ obj_player.gravityDirection = 270;
 obj_player.gravity = 2;
 obj_player.terminalVelocity = 2.2
 
-
 obj_player.dirFacing = 1;
+
+
+//---- Functions ----//
 
 obj_player.run = function() { this.setSprite(this.sprs.run,-1,-1,false,this.dirFacing,1,true); }
 obj_player.onstep = function() {
@@ -83,6 +87,9 @@ obj_player.attack = function(newSpeed = .5) {
 	this.hspeed = (this.fallSpeed > this.gravity ? this.hspeed:0)+5*this.dirFacing;
 	console.log(this.sprite.name,this.sprite.frame);
 }
+
+
+//---- Sprites ----//
 
 obj_player.sprs = {};
 obj_player.sprs.idle = new Sprite("spr_player_idle", "objects/obj_player/sprites/HeroKnight.png",[0,100,100*2,100*3,100*4,100*5,100*6,100*7],0,100,55,100,55,.5);

@@ -15,7 +15,7 @@ obj_foe.onstep = function() {
 	this.iframes--;
 	
 	if(this.iframes <= 0) {
-		let cols = obj_foe.getCollisions(-10,0,false);
+		let cols = obj_foe.getCollisions(obj_player.dirFacing*-12,0,false);
 		for(let c = 0; c < cols.length; c++) {
 			
 			if(cols[c].name === "obj_player") {

@@ -74,10 +74,10 @@ function GameEngine(canvas, fps=24) {
 
 				if(typeof obj.onstep === "function") { obj.onstep(); }
   
-				if(obj.visible/* && obj.x >= room.view.x && obj.x <= room.view.x + room.view.width && obj.y >= room.view.y - && obj.y <= room.view.y + room.view.height*/) {
+				if(obj.visible) {
 
 					if(typeof obj.ondraw === "function") { obj.ondraw(); }
-					if(typeof obj.sprite === "object") { obj.sprite.draw(obj.x, obj.y); }
+					if(typeof obj.sprite === "object" && !obj.getOutsideView()) { obj.sprite.draw(obj.x, obj.y); }
 					
 					if(this.debug.showCBoxes) { this.engine.ctx.strokeRect(-room.view.x + obj.x+obj.collisionBox[0], -room.view.y + obj.y+obj.collisionBox[1], obj.collisionBox[2],obj.collisionBox[3]); }
 				}
@@ -510,6 +510,31 @@ function GameEngine(canvas, fps=24) {
 		return croom.getAllAt(x1,y1,solidOnly,x2-x1,y2-y1,[this.id]);
 	}
 
+	this.getOutsideRoom = function() {
+		let croom = GAME_ENGINE_INSTANCE.getCurrentRoom();
+		let coords = this.getCoords();
+
+		if(coords.x2 < 0 || coords.x1 > croom.width || coords.y2 < 0 || coords.y1 > croom.height) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	this.getOutsideView = function() {
+		let croom = GAME_ENGINE_INSTANCE.getCurrentRoom();
+		let view = croom.view;
+		let coords = this.getCoords();
+
+		if(coords.x2 < view.x || coords.x1 > view.x+view.width || coords.y2 < view.y || coords.y1 > view.y+view.height) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
 	this.generateDepthPath = function(startX, startY, destX, destY, weightedNodes, struckNodes = []) {
 		
 		//Starting wherever we are in the breadth search
@@ -886,9 +911,11 @@ function GameEngine(canvas, fps=24) {
 
 				if(this.scaleX != 1 || this.scaleY != 1) {
 					engine.ctx.save();
-					engine.ctx.scale(this.scaleX,this.scaleY);
+					engine.ctx.translate(x-croom.view.x,y-croom.view.y);
+					//engine.ctx.translate(x,y);
+					engine.ctx.scale(this.scaleX, this.scaleY); x = croom.view.x; y = croom.view.y;
 				}
-				engine.ctx.drawImage(this.resource, xPos, yPos, this.sheetWidth, this.sheetHeight, x*this.scaleX - croom.view.x, y*this.scaleY - croom.view.y, this.drawWidth*this.scaleX, this.drawHeight*this.scaleY);
+				engine.ctx.drawImage(this.resource, xPos, yPos, this.sheetWidth, this.sheetHeight, (x - croom.view.x)*(this.scaleX/Math.abs(this.scaleX)), (y - croom.view.y)*(this.scaleY/Math.abs(this.scaleY)), this.drawWidth*this.scaleX, this.drawHeight*this.scaleY);
  
 				if(this.scaleX != 1 || this.scaleY != 1) {
 					engine.ctx.restore();
